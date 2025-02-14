@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define FILE_NAME "expenses.txt"
+
+struct Expense {
+    char category[30];
+    float amount;
+    char date[15];
+};
+
+void addExpense() {
+    FILE *file = fopen(FILE_NAME, "a");
+    struct Expense e;
+
+    printf("Enter Category: ");
+    scanf("%s", e.category);
+    printf("Enter Amount: ");
+    scanf("%f", &e.amount);
+    printf("Enter Date (YYYY-MM-DD): ");
+    scanf("%s", e.date);
+
+    fprintf(file, "%s %.2f %s\n", e.category, e.amount, e.date);
+    fclose(file);
+
+    printf("Expense added successfully!\n");
+}
+
+void viewExpenses() {
+    FILE *file = fopen(FILE_NAME, "r");
+    struct Expense e;
+
+    if (file == NULL) {
+        printf("No expenses found.\n");
+        return;
+    }
+
+    printf("\n--- Expense List ---\n");
+    while (fscanf(file, "%s %f %s", e.category, &e.amount, e.date) != EOF) {
+        printf("%-15s $%.2f   %s\n", e.category, e.amount, e.date);
+    }
+
+    fclose(file);
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\nExpense Tracker Menu:\n");
+        printf("1. Add Expense\n2. View Expenses\n3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: addExpense(); break;
+            case 2: viewExpenses(); break;
+            case 3: exit(0);
+            default: printf("Invalid choice! Try again.\n");
+        }
+    }
+}
